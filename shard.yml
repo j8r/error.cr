@@ -1,0 +1,9 @@
+name: error.cr
+version: 0.1.0
+
+authors:
+  - Julien Reichardt <mi@jrei.ch>
+
+description: Efficient errors without raising - no expensive stack unwinding
+
+license: ISC
