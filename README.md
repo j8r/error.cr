@@ -37,11 +37,7 @@ Oops! (Error)
 ```crystal
 struct Obj
   def action : String | Error
-    if true
-      Error.throw "Shouldn't be true"
-    else
-      "normal"
-    end
+    Error.throw("Shouldn't be true") || "normal"
   end
 end
 
@@ -59,8 +55,8 @@ p main_program
 result:
 ```
 Action not successful: Shouldn't be true (Error)
-   from myapp.cr:5 in 'Obj#action'
-   from myapp.cr:15 in 'main_program'
+   from myapp.cr:3 in 'Obj#action'
+   from myapp.cr:11 in 'main_program'
 ```
 
 ### Custom errors
