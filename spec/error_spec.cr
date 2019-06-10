@@ -15,7 +15,7 @@ end
 
 def main_program(message : String? = nil) : Error?
   case result = standard_error
-  when Error then throw result, message
+  when Error then Error.throw message, result
   end
 end
 

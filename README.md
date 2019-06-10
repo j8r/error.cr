@@ -5,6 +5,17 @@
 
 An efficient way to handle errors without using `raise` - no expensive stack unwinding.
 
+## Advantages
+
+Over "classic" `Exception` errors, this approach provides:
+
+- Shorter traces without stdlib related calls
+- More useful output with the object and method called
+- More performant than unwinding the stack (what `raise` does)
+
+The main disadvantage is the slight verbosity added, having a new type `Error` type to handle.
+On the other side `begin/rescue` aren't needed
+
 ## Installation
 
 Add the dependency to your `shard.yml`:
@@ -36,6 +47,8 @@ Oops! (Error)
 ### Handling errors
 
 ```crystal
+require "error"
+
 struct Obj
   def action : String | Error
     Error.throw("Shouldn't be true") || "normal"
@@ -45,8 +58,8 @@ end
 def main_program : String | Error
   case result = Obj.new.action
   # Throw the error on the top.
-  # Optionaly, the message can be modified with a second argument
-  when Error then throw result, "Action not successful: #{result}"
+  # Optionaly, the message can be modified and a parent error specified.
+  when Error then Error.throw "Action not successful: #{result}", result
   else            "operation successful: " + result
   end
 end
@@ -56,8 +69,8 @@ p main_program
 result:
 ```
 Action not successful: Shouldn't be true (Error)
-   from myapp.cr:3 in 'Obj#action'
-   from myapp.cr:11 in 'main_program'
+   from myapp.cr:5 in 'Obj#action'
+   from myapp.cr:13 in 'main_program'
 ```
 
 ### Custom errors
@@ -83,7 +96,7 @@ This is a custom error message (CustomError)
 
 ### I can't use this in my main program.
 
-This libary can only be used inside methods, because the `throw` macro expands to a `return Error`.
+This libary can only be used inside methods, because the `Error.throw` macro expands to a `return Error`.
 
 ### This doesn't work in the `initialize` of my class!
 

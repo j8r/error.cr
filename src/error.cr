@@ -12,6 +12,8 @@ class Error
     line : Int32,
     parent : Error?
 
+  # Creates a new error.
+  # Usualy, don't have to be used directly.
   def initialize(
     @type : String,
     @receiver : Bool,
@@ -25,16 +27,16 @@ class Error
     @file = file.lchop CURRENT_DIR
   end
 
-  def to_s(io : IO)
+  def to_s(io : IO) : Nil
     io << message
   end
 
-  def inspect(io : IO)
+  def inspect(io : IO) : Nil
     io << message << " (" << self.class << ')'
     backtrace io
   end
 
-  def backtrace(io : IO)
+  def backtrace(io : IO) : Nil
     @parent.try &.backtrace io
     io << "\n   from " << @file << ':' << @line << " in '"
     if @type != "<Program>"
@@ -44,11 +46,9 @@ class Error
     io << @method << '\''
   end
 
-  macro throw(message = nil)
-    return {{@type}}.new(\{{@type.stringify}}, {{@def.receiver.stringify.empty?}}, {{@def.name.stringify}}, {{message}}, __FILE__, __LINE__)
+  # Throws an error with a message, object, method, file and line location.
+  # Optionally adds a parent `Error`.
+  macro throw(message = nil, parent_error = nil)
+    return {{@type}}.new(\{{@type.stringify}}, {{@def.receiver.stringify.empty?}}, {{@def.name.stringify}}, {{message}}, __FILE__, __LINE__, {{parent_error.id}})
   end
-end
-
-macro throw(error, message = nil)
-  return {{error}}.class.new({{@type.stringify}}, {{@def.receiver.stringify.empty?}}, {{@def.name.stringify}}, {{message}}, __FILE__, __LINE__, {{error.id}})
 end
