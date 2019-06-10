@@ -1,5 +1,6 @@
 # Crystal Error
 
+[![Build Status](https://cloud.drone.io/api/badges/j8r/error.cr/status.svg)](https://cloud.drone.io/j8r/error.cr)
 [![ISC](https://img.shields.io/badge/License-ISC-blue.svg?style=flat-square)](https://en.wikipedia.org/wiki/ISC_license)
 
 An efficient way to handle errors without using `raise` - no expensive stack unwinding.
